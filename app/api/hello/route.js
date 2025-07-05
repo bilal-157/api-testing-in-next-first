@@ -1,5 +1,3 @@
-export async function GET(request) {
-  return new Response(JSON.stringify({ message: "Hello World" }), {
-    headers: { "Content-Type": "application/json" },
-  });
+export async function GET() {
+  return Response.json({ message: "Hello from Vercel!" });
 }
