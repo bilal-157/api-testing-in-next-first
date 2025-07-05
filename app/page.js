@@ -1,4 +1,3 @@
-// In your page.js - use this version
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,30 +5,49 @@ import { useEffect, useState } from "react";
 export default function HomePage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simple relative URL - works everywhere
-    fetch("/api/hello")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await fetch("/api/hello");
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return res.json();
-      })
-      .then((data) => setMessage(data.message))
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-      });
+
+        const data = await response.json();
+        setMessage(data.message);
+      } catch (err) {
+        console.error("API request failed:", err);
+        setError(err.message || "Failed to fetch data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <div>
       <h1>Welcome to My Full Stack App</h1>
-      {error ? (
-        <p>Error: {error}</p>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <div>
+          <p style={{ color: "red" }}>Error: {error}</p>
+          <p>Try visiting the API directly:{" "}
+            <a href="/api/hello" target="_blank">
+              /api/hello
+            </a>
+          </p>
+        </div>
       ) : (
-        <p>Message from API: {message || "Loading..."}</p>
+        <p>Message from API: {message}</p>
       )}
     </div>
   );
