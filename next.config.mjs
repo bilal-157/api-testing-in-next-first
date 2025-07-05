@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    NEXT_PUBLIC_VERCEL_URL: process.env.VERCEL_URL,
-  },
-};
-
-export default nextConfig;
+    // You don't actually need this for API routes
+    // But if you want to keep it:
+    env: {
+      CUSTOM_KEY: process.env.CUSTOM_KEY,
+    },
+  };
+  
+  export default nextConfig;
